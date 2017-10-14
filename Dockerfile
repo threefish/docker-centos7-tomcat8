@@ -29,8 +29,7 @@ RUN curl \
 	"${APACHE_TOMCAT_DOWNLOAD_URL}" \
 	| tar -xz -C /usr/local
 
-# Modify default config to use well-known paths
-
+# 修改TOMCAT配置文件
 RUN cat ${APACHE_TOMCAT_INSTALL_DIR}/conf/server.xml | \
 	sed 's/port="8080"/port="8080" useBodyEncodingForURI="true" URIEncoding="UTF-8" /' | \
 	sed 's/appBase="webapps"/appBase="\/tomcat\/webapps"/' | \
@@ -39,16 +38,14 @@ RUN cat ${APACHE_TOMCAT_INSTALL_DIR}/conf/server.xml | \
 
 RUN cp /tmp/server.xml ${APACHE_TOMCAT_INSTALL_DIR}/conf/server.xml
 RUN rm /tmp/server.xml
-
-
+RUN rm -rf   ${CATALINA_HOME}/bin/*.bat \
+             ${CATALINA_HOME}/bin/tomcat-native.tar.gz \
+             ${CATALINA_HOME}/webapps/* 
 
 
 RUN mkdir -p /tomcat/webapps/
 RUN mkdir -p /tomcat/logs/
 
-COPY entrypoint.sh /
-RUN chmod +x entrypoint.sh
-
 EXPOSE 8080 8009
 VOLUME ["/tomcat/webapps", "/tomcat/logs"]
-CMD ["/entrypoint.sh"]
+CMD ["${APACHE_TOMCAT_INSTALL_DIR}/bin/catalina.sh","run"]
