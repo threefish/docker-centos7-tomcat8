@@ -11,7 +11,7 @@ ENV JAVA_OPTS -Dfile.encoding=UTF-8
 #拷贝JDK至容器内部
 COPY jdk-8u152-linux-x64.tar.gz /tmp/jdk.tar.gz
 RUN mkdir -p /usr/java
-RUN tar -xzf /tmp/jdk.tar.gz -C /usr/java
+RUN tar -xf /tmp/jdk.tar.gz -C /usr/java
 RUN chown -R root:root ${JDK_HOME}
 RUN echo "PATH=$PATH:/usr/java/${JAVA_FOLDER_NAME}/jre/bin:/usr/java/${JAVA_FOLDER_NAME}/bin" > /etc/profile.d/java
 RUN rm /tmp/jdk.tar.gz
